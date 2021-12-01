@@ -39,19 +39,14 @@ class Application(tk.Tk):
         self.btn = tk.Button(self, text="Quit", command=self.quit)
         self.btn.pack()
 
-        self.btn2 = tk.Button(self, text="About", command=self.quit)
-        self.btn2.pack()
+        #self.btn2 = tk.Button(self, text="About", command=self.quit)
+        #self.btn2.pack()
 
-        def change(self, event):
-            self.lblG.config(text = "nigga")
-            self.canvasMain.config(background = "#562398")
-        
+    def change(self, event):
         r = self.scaleR.get()
         g = self.scaleG.get()
         b = self.scaleB.get()
-        self.canvasMain.config(background = f"{r:02x}{g:02x}{b:02x}")
-        print(f"{r:2x}{g:2x}{b:2x}")
-        print(f"{r:02x}{g:02x}{b:02x}")
+        self.canvasMain.config(background = f"#{r:02x}{g:02x}{b:02x}")
 
 
 
