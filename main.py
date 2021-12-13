@@ -18,12 +18,13 @@ class Application(tk.Tk):
 
 ### R
         self.varR = StringVar()
+        self.vaR.trace("w", self.change)
         self.frameR= Frame(self)
         self.frameR.pack()
         self.lblR = tk.Label(self.frameR, text="R")
         self.lblR.pack(side = LEFT, anchor = S)
         self.scaleR = Scale(self.frameR,
-        from_=0, to =255,orient = HORIZONTAL, length = 256, command = self.change, variable = self.varR)
+        from_=0, to =255,orient = HORIZONTAL, length = 256, variable = self.varR)
 
         self.scaleR.pack(side = LEFT, anchor = S)
         self.entryR = Entry(self.frameR, width = 5, textvariable = self.varR)
