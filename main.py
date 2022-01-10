@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+from genericpath import exists
 from os.path import basename, splitext
 import tkinter as tk
 from tkinter import Scale, HORIZONTAL, Canvas, Frame, Entry, LEFT, S, StringVar
@@ -15,6 +16,7 @@ class Application(tk.Tk):
         self.title(self.name)
 
         self.bind("<Escape>", self.quit)
+        self.protocol("WM_DELETE_WINDOW", self.quit)
 
 # R
         self.varR = StringVar()
@@ -83,6 +85,8 @@ class Application(tk.Tk):
                         canvas.grid(row = row, column = column)
                         canvas.bind("<Button-1>", self.mousehandler)
                         self.canvasMem.append(canvas)
+        
+        self.colorLoad()
 
 
 
@@ -96,7 +100,12 @@ class Application(tk.Tk):
                     event.widget.config(background =  self.color)
 
 
-    def change(self, var, index, mode):
+                    if event.widget is self.canvasMain:
+                            self.canvasColor2Slids(self.canvasMain)
+
+
+
+    def change(self, var=None, index=None, mode=None):
         r = int(self.varR.get())
         g = int(self.varG.get())
         b = int(self.varB.get())
@@ -104,15 +113,44 @@ class Application(tk.Tk):
         self.canvasMain.config(background=colorstring)
         self.varMain.set(colorstring)
 
-        # self.varR.set(r)
-        # self.varG.set(g)
-        # self.varB.set(b)
+
+
+
+    def canvasColor2Slids(self, canvas):
+            color = canvas.cget("background")
+            r = int(color[1:3], 16)
+            g = int(color[3:5], 16)
+            b = int(color[5:], 16)
+            self.varR.set(r)
+            self.varG.set(g)
+            self.varB.set(b)
+            self.change()
+
+    def colorSave(self):
+            with open("colors.txt","w") as f:
+                    f.write(self.canvasMain.cget("background")+"\n")
+                    for canvas in self.canvasMem:
+                            f.write(canvas.cget("background")+"\/n")
+
+    def colorLoad(self):
+            if exists ("color.txt"):
+                    with open("colors.txt","r") as f:
+                            colorcode = f.readline().strip()
+                            self.canvasMain.config(background = colorcode)
+                            self.canvasColor2Slids(self.canvasMain)
+                            for canvas in self.canvasMem:
+                                    colorcode = f.readline().strip()
+                                    canvas.config(background = colorcode)
+            else:
+                    print("Nepodařilo se načíst soubor barev")
+
         #r = self.scaleR.get()
         #g = self.scaleG.get()
         #b = self.scaleB.get()
 
     def quit(self, event=None):
-        super().quit()
+            self.colorSave()
+            super().quit()
 
 
 app = Application()
